@@ -1,2 +1,2 @@
 # tonpay-core
-Tonpay core utils and tols
+Tonpay core utils and tools
