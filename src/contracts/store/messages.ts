@@ -8,7 +8,7 @@ export function buildEditStoreMessage(
   image: string,
   mccCode: number
 ) {
-  beginCell()
+  return beginCell()
     .storeUint(StoreOpCodes.EDIT_STORE, 32)
     .storeUint(0, 64)
     .storeRef(comment(name))
