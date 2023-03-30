@@ -1,14 +1,13 @@
 {
   "name": "@tonpay/core",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Tonpay core utilities and tools to interact with Tonpay core entities and create various deeplinks for external usage.",
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "scripts": {
-    "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs"
+    "build": "npm run build:esm",
+    "build:esm": "tsc"
   },
   "repository": {
     "type": "git",
