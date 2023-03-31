@@ -5,9 +5,9 @@ export type StoreConfig = {
   name: string;
   description: string;
   image: string;
-  mcc_code: number;
+  mccCode: number;
   active: boolean;
-  invoice_code: Cell;
+  invoiceCode: Cell;
 };
 
 export type StoreData = {
@@ -15,8 +15,8 @@ export type StoreData = {
   name: string;
   description: string;
   image: string;
-  mcc_code: number;
+  mccCode: number;
   active: boolean;
-  invoice_code: Cell;
+  invoiceCode: Cell;
   version: number;
 };

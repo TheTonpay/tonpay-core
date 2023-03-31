@@ -17,9 +17,9 @@ export function storeConfigToCell(config: StoreConfig): Cell {
     .storeRef(comment(config.name))
     .storeRef(comment(config.description))
     .storeRef(comment(config.image))
-    .storeUint(config.mcc_code, 16)
+    .storeUint(config.mccCode, 16)
     .storeInt(config.active ? -1 : 0, 2)
-    .storeRef(config.invoice_code)
+    .storeRef(config.invoiceCode)
     .endCell();
 }
 
@@ -214,9 +214,9 @@ export class StoreWrapper implements Contract {
       name: result.stack.readString().substring(4),
       description: result.stack.readString().substring(4),
       image: result.stack.readString().substring(4),
-      mcc_code: result.stack.readNumber(),
+      mccCode: result.stack.readNumber(),
       active: result.stack.readNumber() === -1,
-      invoice_code: result.stack.readCell(),
+      invoiceCode: result.stack.readCell(),
       version: result.stack.readNumber(),
     };
   }
