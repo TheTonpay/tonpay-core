@@ -1,5 +1,5 @@
 import { Address } from "ton-core";
-import { buildMessageDeeplink } from ".";
+import { DeeplinkFormat, buildMessageDeeplink } from ".";
 import { buildPayInvoiceMessage } from "../contracts";
 import { isAddress } from "../address";
 
@@ -8,6 +8,7 @@ import { isAddress } from "../address";
  *
  * @param invoiceAddress The address of the invoice contract
  * @param amount The amount to pay in nanoTON
+ * @param format The deeplink format (ton or tonkeeper, defaults to ton)
  *
  * @returns The deeplink
  *
@@ -20,7 +21,11 @@ import { isAddress } from "../address";
  *   );
  * ```
  */
-export function buildStorePaymentLink(invoiceAddress: string, amount: number) {
+export function buildStorePaymentLink(
+  invoiceAddress: string,
+  amount: number,
+  format: DeeplinkFormat = "ton"
+) {
   if (amount <= 0) {
     throw new Error("Amount must be positive");
   }
@@ -32,6 +37,7 @@ export function buildStorePaymentLink(invoiceAddress: string, amount: number) {
   return buildMessageDeeplink(
     Address.parse(invoiceAddress),
     BigInt(amount),
-    buildPayInvoiceMessage()
+    buildPayInvoiceMessage(),
+    format
   );
 }

@@ -1,12 +1,21 @@
 import { Address, Cell } from "ton-core";
 
+export * from "./invoice";
+export * from "./store";
+
+export type DeeplinkFormat = "ton" | "tonkeeper";
+
 export function buildTonDeeplink(
   address: Address,
   amount: bigint,
   body?: Cell,
-  stateInit?: Cell
+  stateInit?: Cell,
+  format: DeeplinkFormat = "ton"
 ) {
-  return `ton://transfer/${address}?amount=${amount.toString()}${
+  console.log(format);
+  return `${
+    format === "ton" ? "ton://" : "https://app.tonkeeper.com/"
+  }transfer/${address}?amount=${amount.toString()}${
     body ? "&bin=" + body.toBoc().toString("base64") : ""
   }${stateInit ? "&init=" + stateInit.toBoc().toString("base64") : ""}`;
 }
@@ -19,15 +28,17 @@ export function buildContractDeployDeeplink(
   address: Address,
   amount: bigint,
   stateInit: Cell,
-  body?: Cell
+  body?: Cell,
+  format: DeeplinkFormat = "ton"
 ) {
-  return buildTonDeeplink(address, amount, body, stateInit);
+  return buildTonDeeplink(address, amount, body, stateInit, format);
 }
 
 export function buildMessageDeeplink(
   address: Address,
   amount: bigint,
-  body: Cell
+  body: Cell,
+  format: DeeplinkFormat = "ton"
 ) {
-  return buildTonDeeplink(address, amount, body);
+  return buildTonDeeplink(address, amount, body, undefined, format);
 }

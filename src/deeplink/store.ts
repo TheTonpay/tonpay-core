@@ -1,5 +1,5 @@
 import { Address, toNano } from "ton-core";
-import { buildMessageDeeplink } from ".";
+import { DeeplinkFormat, buildMessageDeeplink } from ".";
 import { isAddress } from "../address";
 import { buildRequestPurchaseMessage } from "../contracts/store/messages";
 
@@ -9,6 +9,7 @@ import { buildRequestPurchaseMessage } from "../contracts/store/messages";
  * @param storeAddress The address of the store contract
  * @param amount The amount to pay in nanoTON
  * @param invoiceId The invoice id
+ * @param format The deeplink format (ton or tonkeeper, defaults to ton)
  *
  * @returns The deeplink
  *
@@ -25,7 +26,8 @@ import { buildRequestPurchaseMessage } from "../contracts/store/messages";
 export function buildUserPaymentLink(
   storeAddress: string,
   amount: number,
-  invoiceId: string
+  invoiceId: string,
+  format: DeeplinkFormat = "ton"
 ) {
   if (amount <= 0) {
     throw new Error("Amount must be positive");
@@ -46,6 +48,7 @@ export function buildUserPaymentLink(
   return buildMessageDeeplink(
     Address.parse(storeAddress),
     toNano(`${amount + 0.04}`),
-    buildRequestPurchaseMessage(invoiceId, toNano(amount))
+    buildRequestPurchaseMessage(invoiceId, toNano(`${amount}`)),
+    format
   );
 }
