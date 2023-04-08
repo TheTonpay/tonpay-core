@@ -5,6 +5,7 @@ export type StoreConfig = {
   name: string;
   description: string;
   image: string;
+  webhook: string;
   mccCode: number;
   active: boolean;
   invoiceCode: Cell;
@@ -15,6 +16,7 @@ export type StoreData = {
   name: string;
   description: string;
   image: string;
+  webhook: string;
   mccCode: number;
   active: boolean;
   invoiceCode: Cell;

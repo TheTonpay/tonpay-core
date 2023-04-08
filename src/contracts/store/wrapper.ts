@@ -17,7 +17,12 @@ export function storeConfigToCell(config: StoreConfig): Cell {
     .storeAddress(Address.parse(config.owner))
     .storeRef(comment(config.name))
     .storeRef(comment(config.description))
-    .storeRef(comment(config.image))
+    .storeRef(
+      beginCell()
+        .storeRef(comment(config.image))
+        .storeRef(comment(config.webhook))
+        .endCell()
+    )
     .storeUint(config.mccCode, 16)
     .storeInt(config.active ? -1 : 0, 2)
     .storeRef(config.invoiceCode)
@@ -168,6 +173,11 @@ export class StoreWrapper implements Contract {
     });
   }
 
+  async getStoreOwner(provider: ContractProvider) {
+    const result = await provider.get("get_store_owner", []);
+    return result.stack.readAddress();
+  }
+
   async getStoreName(provider: ContractProvider) {
     const result = await provider.get("get_store_name", []);
     return result.stack.readString();
@@ -183,14 +193,14 @@ export class StoreWrapper implements Contract {
     return result.stack.readString();
   }
 
+  async getStoreWebhook(provider: ContractProvider) {
+    const result = await provider.get("get_store_webhook", []);
+    return result.stack.readString();
+  }
+
   async getStoreMccCode(provider: ContractProvider) {
     const result = await provider.get("get_store_mcc_code", []);
     return result.stack.readNumber();
-  }
-
-  async getStoreOwner(provider: ContractProvider) {
-    const result = await provider.get("get_store_owner", []);
-    return result.stack.readAddress();
   }
 
   async getStoreActive(provider: ContractProvider) {

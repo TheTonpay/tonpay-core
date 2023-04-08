@@ -6,6 +6,7 @@ export function buildEditStoreMessage(
   name: string,
   description: string,
   image: string,
+  webhook: string,
   mccCode: number
 ) {
   return beginCell()
@@ -14,6 +15,7 @@ export function buildEditStoreMessage(
     .storeRef(comment(name))
     .storeRef(comment(description))
     .storeRef(comment(image))
+    .storeRef(comment(webhook))
     .storeUint(mccCode, 16)
     .endCell();
 }
