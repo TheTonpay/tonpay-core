@@ -1,4 +1,8 @@
-export { STORE_CODE, STORE_VERSION } from "./code";
+export {
+  STORE_CODE,
+  STORE_VERSION,
+  supportedVersions as supportedStoreVersions,
+} from "./code";
 
 export { StoreOpCodes } from "./opcodes";
 

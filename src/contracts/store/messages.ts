@@ -36,6 +36,7 @@ export function buildIssueInvoiceMessage(
   hasCustomer: boolean,
   customer: string,
   invoiceId: string,
+  metadata: string,
   amount: bigint
 ) {
   return beginCell()
@@ -50,15 +51,21 @@ export function buildIssueInvoiceMessage(
         .endCell()
     )
     .storeRef(comment(invoiceId))
+    .storeRef(comment(metadata))
     .storeUint(amount, 64)
     .endCell();
 }
 
-export function buildRequestPurchaseMessage(invoiceId: string, amount: bigint) {
+export function buildRequestPurchaseMessage(
+  invoiceId: string,
+  amount: bigint,
+  metadata?: string
+) {
   return beginCell()
     .storeUint(StoreOpCodes.REQUEST_PURCHASE, 32)
     .storeUint(0, 64)
     .storeRef(comment(invoiceId))
+    .storeRef(comment(metadata ?? ""))
     .storeUint(amount, 64)
     .endCell();
 }

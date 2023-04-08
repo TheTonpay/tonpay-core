@@ -5,6 +5,7 @@ export type InvoiceConfig = {
   hasCustomer: boolean;
   customer: string;
   invoiceId: string;
+  metadata: string;
   amount: number;
   paid: boolean;
   active: boolean;
@@ -17,6 +18,7 @@ export type InvoiceData = {
   hasCustomer: boolean;
   customer: string;
   invoiceId: string;
+  metadata: string;
   amount: number;
   paid: boolean;
   active: boolean;

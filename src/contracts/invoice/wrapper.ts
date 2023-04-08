@@ -11,7 +11,7 @@ import {
 } from "ton-core";
 import { InvoiceConfig, InvoiceData } from "./types";
 import { isAddress, ZERO_ADDRESS } from "../../address";
-import { INVOICE_CODE } from "./code";
+import { INVOICE_CODE, INVOICE_VERSION, supportedVersions } from "./code";
 
 export function invoiceConfigToCell(config: InvoiceConfig): Cell {
   if (!config.store) {
@@ -54,6 +54,10 @@ export function invoiceConfigToCell(config: InvoiceConfig): Cell {
     throw new Error("Invoice ID must not be longer than 120 characters");
   }
 
+  if (config.metadata && config.metadata.length > 500) {
+    throw new Error("MEtadata must not be longer than 500 characters");
+  }
+
   if (config.amount <= 0) {
     throw new Error("Amount must be greater than 0");
   }
@@ -75,6 +79,9 @@ export function invoiceConfigToCell(config: InvoiceConfig): Cell {
     .storeRef(
       beginCell().storeSlice(comment(config.invoiceId).asSlice()).endCell()
     )
+    .storeRef(
+      beginCell().storeSlice(comment(config.metadata).asSlice()).endCell()
+    )
     .storeUint(config.amount, 64)
     .storeInt(config.paid ? -1 : 0, 2)
     .storeInt(config.active ? -1 : 0, 2)
@@ -88,6 +95,7 @@ export function precalculateInvoiceAddress(
   hasCustomer: boolean,
   customer: string,
   invoiceId: string,
+  metadata: string,
   amount: number
 ): Address {
   const config: InvoiceConfig = {
@@ -97,6 +105,7 @@ export function precalculateInvoiceAddress(
     hasCustomer,
     customer,
     invoiceId,
+    metadata,
     amount,
     paid: false,
     active: true,
@@ -222,6 +231,11 @@ export class InvoiceWrapper implements Contract {
     return result.stack.readString();
   }
 
+  async getInvoiceMetadata(provider: ContractProvider) {
+    const result = await provider.get("get_invoice_metadata", []);
+    return result.stack.readString();
+  }
+
   async getInvoiceAmount(provider: ContractProvider) {
     const result = await provider.get("get_invoice_amount", []);
     return result.stack.readNumber();
@@ -242,19 +256,17 @@ export class InvoiceWrapper implements Contract {
     return result.stack.readNumber();
   }
 
-  async getInvoiceData(provider: ContractProvider): Promise<InvoiceData> {
+  async getInvoiceData(
+    provider: ContractProvider,
+    version?: number
+  ): Promise<InvoiceData> {
     const result = await provider.get("get_invoice_data", []);
-    return {
-      store: result.stack.readAddress().toString(),
-      merchant: result.stack.readAddress().toString(),
-      beneficiary: result.stack.readAddress().toString(),
-      hasCustomer: result.stack.readNumber() == -1,
-      customer: result.stack.readAddress().toString(),
-      invoiceId: result.stack.readString().substring(4),
-      amount: result.stack.readNumber(),
-      paid: result.stack.readNumber() == -1,
-      active: result.stack.readNumber() == -1,
-      version: result.stack.readNumber(),
-    };
+    const decoder = supportedVersions.find(
+      (v) => v.version == (version ?? INVOICE_VERSION)
+    );
+    if (!decoder) {
+      throw new Error(`Unsupported invoice version: ${version}`);
+    }
+    return decoder.mapData(result);
   }
 }

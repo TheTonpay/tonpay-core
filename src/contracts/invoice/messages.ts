@@ -7,6 +7,7 @@ export function buildEditInvoiceMessage(
   hasCustomer: boolean,
   customer: string,
   invoiceId: string,
+  metadata: string,
   amount: bigint
 ) {
   if (amount <= 0) {
@@ -25,6 +26,10 @@ export function buildEditInvoiceMessage(
     throw new Error("Invoice ID must not be longer than 120 characters");
   }
 
+  if (metadata && metadata.length > 500) {
+    throw new Error("Metadata must not be longer than 500 characters");
+  }
+
   return beginCell()
     .storeUint(InvoiceOpCodes.EDIT_INVOICE, 32)
     .storeUint(0, 64)
@@ -37,6 +42,7 @@ export function buildEditInvoiceMessage(
         .endCell()
     )
     .storeRef(comment(invoiceId))
+    .storeRef(comment(metadata))
     .storeUint(amount, 64)
     .endCell();
 }

@@ -10,6 +10,7 @@ import {
   SendMode,
 } from "ton-core";
 import { StoreConfig, StoreData } from "./types";
+import { STORE_VERSION, supportedVersions } from "./code";
 
 export function storeConfigToCell(config: StoreConfig): Cell {
   return beginCell()
@@ -207,17 +208,17 @@ export class StoreWrapper implements Contract {
     return result.stack.readNumber();
   }
 
-  async getStoreData(provider: ContractProvider): Promise<StoreData> {
+  async getStoreData(
+    provider: ContractProvider,
+    version?: number
+  ): Promise<StoreData> {
     const result = await provider.get("get_store_data", []);
-    return {
-      owner: result.stack.readAddress().toString(),
-      name: result.stack.readString().substring(4),
-      description: result.stack.readString().substring(4),
-      image: result.stack.readString().substring(4),
-      mccCode: result.stack.readNumber(),
-      active: result.stack.readNumber() === -1,
-      invoiceCode: result.stack.readCell(),
-      version: result.stack.readNumber(),
-    };
+    const decoder = supportedVersions.find(
+      (v) => v.version === (version ?? STORE_VERSION)
+    );
+    if (!decoder) {
+      throw new Error(`Unsupported store version: ${version}`);
+    }
+    return decoder.mapData(result);
   }
 }

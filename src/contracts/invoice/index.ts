@@ -1,4 +1,8 @@
-export { INVOICE_CODE, INVOICE_VERSION } from "./code";
+export {
+  INVOICE_CODE,
+  INVOICE_VERSION,
+  supportedVersions as supportedInvoiceVersions,
+} from "./code";
 
 export { InvoiceOpCodes } from "./opcodes";
 

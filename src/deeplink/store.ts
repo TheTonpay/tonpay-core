@@ -9,6 +9,7 @@ import { buildRequestPurchaseMessage } from "../contracts/store/messages";
  * @param storeAddress The address of the store contract
  * @param amount The amount to pay in nanoTON
  * @param invoiceId The invoice id
+ * @param metadata Optional metadata string, max 500 characters
  * @param format The deeplink format (ton or tonkeeper, defaults to ton)
  *
  * @returns The deeplink
@@ -27,6 +28,7 @@ export function buildUserPaymentLink(
   storeAddress: string,
   amount: number,
   invoiceId: string,
+  metadata?: string,
   format: DeeplinkFormat = "ton"
 ) {
   if (amount <= 0) {
@@ -45,10 +47,14 @@ export function buildUserPaymentLink(
     throw new Error("Invoice id must not be longer than 120 characters");
   }
 
+  if (metadata && metadata.length > 500) {
+    throw new Error("Metadata must not be longer than 500 characters");
+  }
+
   return buildMessageDeeplink(
     Address.parse(storeAddress),
     toNano(`${amount + 0.04}`),
-    buildRequestPurchaseMessage(invoiceId, toNano(`${amount}`)),
+    buildRequestPurchaseMessage(invoiceId, toNano(`${amount}`), metadata),
     format
   );
 }
