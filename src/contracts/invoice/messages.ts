@@ -1,7 +1,7 @@
 import { beginCell, comment } from "ton-core";
 import { InvoiceOpCodes } from "./opcodes";
 import { Address } from "ton";
-import { ZERO_ADDRESS } from "../../address";
+import { ZERO_ADDRESS, isAddress } from "../../address";
 
 export function buildEditInvoiceMessage(
   hasCustomer: boolean,
@@ -14,7 +14,7 @@ export function buildEditInvoiceMessage(
     throw new Error("Amount must be greater than 0");
   }
 
-  if (hasCustomer && !Address.isAddress(customer)) {
+  if (hasCustomer && !isAddress(customer)) {
     throw new Error("Invalid customer address");
   }
 
