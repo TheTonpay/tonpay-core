@@ -28,7 +28,7 @@ export function buildUserPaymentLink(
   storeAddress: string,
   amount: number,
   invoiceId: string,
-  metadata?: string,
+  metadata: string | null,
   format: DeeplinkFormat = "ton"
 ) {
   if (amount <= 0) {

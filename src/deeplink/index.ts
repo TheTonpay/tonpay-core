@@ -12,7 +12,6 @@ export function buildTonDeeplink(
   stateInit?: Cell,
   format: DeeplinkFormat = "ton"
 ) {
-  console.log(format);
   return `${
     format === "ton" ? "ton://" : "https://app.tonkeeper.com/"
   }transfer/${address}?amount=${amount.toString()}${

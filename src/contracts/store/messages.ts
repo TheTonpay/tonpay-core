@@ -61,7 +61,7 @@ export function buildIssueInvoiceMessage(
 export function buildRequestPurchaseMessage(
   invoiceId: string,
   amount: bigint,
-  metadata?: string
+  metadata: string | null
 ) {
   return beginCell()
     .storeUint(StoreOpCodes.REQUEST_PURCHASE, 32)
