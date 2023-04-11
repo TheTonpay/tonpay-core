@@ -28,6 +28,7 @@ export function buildUserPaymentLink(
   storeAddress: string,
   amount: number,
   invoiceId: string,
+  gasFee: number,
   metadata: string | null,
   format: DeeplinkFormat = "ton"
 ) {
@@ -53,7 +54,7 @@ export function buildUserPaymentLink(
 
   return buildMessageDeeplink(
     Address.parse(storeAddress),
-    toNano(`${amount + 0.04}`),
+    toNano(`${amount + gasFee}`),
     buildRequestPurchaseMessage(invoiceId, toNano(`${amount}`), metadata),
     format
   );
