@@ -1,6 +1,7 @@
-import { Address, Cell, beginCell, comment } from "ton-core";
+import { Address, Cell, beginCell, comment, toNano } from "ton-core";
 import { StoreOpCodes } from "./opcodes";
 import { ZERO_ADDRESS } from "../../address";
+import { buildSendJettonsMessage } from "../jettonWallet/messages";
 
 export function buildEditStoreMessage(
   name: string,
@@ -39,7 +40,10 @@ export function buildIssueInvoiceMessage(
   customer: string,
   invoiceId: string,
   metadata: string,
-  amount: bigint
+  amount: bigint,
+  acceptsJetton: boolean,
+  jettonMasterAddress: string,
+  jettonWalletCode: string
 ) {
   return beginCell()
     .storeUint(StoreOpCodes.ISSUE_INVOICE, 32)
@@ -55,6 +59,9 @@ export function buildIssueInvoiceMessage(
     .storeRef(comment(invoiceId))
     .storeRef(comment(metadata))
     .storeUint(amount, 64)
+    .storeInt(acceptsJetton ? -1 : 0, 2)
+    .storeAddress(Address.parse(jettonMasterAddress))
+    .storeRef(Cell.fromBase64(jettonWalletCode))
     .endCell();
 }
 
@@ -70,6 +77,37 @@ export function buildRequestPurchaseMessage(
     .storeRef(comment(metadata ?? ""))
     .storeUint(amount, 64)
     .endCell();
+}
+
+export function buildRequestPurchaseWithJettonsMessage(
+  invoiceId: string,
+  amount: bigint,
+  metadata: string | null,
+  jettonAmount: bigint,
+  storeAddress: string,
+  jettonMasterAddress: string,
+  jettonWalletCode: string
+) {
+  if (amount < toNano("0.6")) {
+    // 0.5 TON min required forward payload plus 0.1 TON for initial gas
+    throw new Error("Amount must be at least 0.6");
+  }
+
+  return buildSendJettonsMessage(
+    amount,
+    storeAddress,
+    storeAddress,
+    toNano("0.5"),
+    beginCell()
+      .storeUint(StoreOpCodes.REQUEST_PURCHASE, 32)
+      .storeRef(Cell.fromBase64(jettonWalletCode))
+      .storeAddress(Address.parse(jettonMasterAddress))
+      .storeRef(comment(invoiceId))
+      .storeRef(comment(metadata ?? ""))
+      .storeUint(jettonAmount, 64)
+      .endCell(),
+    true
+  );
 }
 
 export function buildFullCodeUpgradeMessage(

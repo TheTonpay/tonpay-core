@@ -21,4 +21,5 @@ export {
   buildDeactivateInvoiceMessage,
   buildEditInvoiceMessage,
   buildPayInvoiceMessage,
+  buildPayInvoiceWithJettonsMessage,
 } from "./messages";

@@ -1,3 +1,5 @@
+import { Cell } from "ton-core";
+
 export type InvoiceConfig = {
   store: string;
   merchant: string;
@@ -9,6 +11,9 @@ export type InvoiceConfig = {
   amount: number;
   paid: boolean;
   active: boolean;
+  acceptsJetton: boolean;
+  jettonMasterAddress: string;
+  jettonWalletCode: Cell;
 };
 
 export type InvoiceData = {
@@ -22,5 +27,8 @@ export type InvoiceData = {
   amount: number;
   paid: boolean;
   active: boolean;
+  acceptsJetton: boolean;
+  jettonMasterAddress: string;
+  jettonWalletCode: Cell;
   version: number;
 };

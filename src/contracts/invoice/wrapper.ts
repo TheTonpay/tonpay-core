@@ -85,6 +85,16 @@ export function invoiceConfigToCell(config: InvoiceConfig): Cell {
     .storeUint(config.amount, 64)
     .storeInt(config.paid ? -1 : 0, 2)
     .storeInt(config.active ? -1 : 0, 2)
+    .storeRef(
+      beginCell()
+        .storeInt(config.acceptsJetton ? -1 : 0, 2)
+        .storeAddress(
+          config.acceptsJetton
+            ? Address.parse(config.jettonMasterAddress)
+            : Address.parseRaw(ZERO_ADDRESS)
+        )
+        .storeRef(config.acceptsJetton ? config.jettonWalletCode : Cell.EMPTY)
+    )
     .endCell();
   return cell;
 }
@@ -96,7 +106,10 @@ export function precalculateInvoiceAddress(
   customer: string,
   invoiceId: string,
   metadata: string,
-  amount: number
+  amount: number,
+  acceptsJetton: boolean,
+  jettonMasterAddress: string,
+  jettonWalletCode: string
 ): Address {
   const config: InvoiceConfig = {
     store,
@@ -109,6 +122,9 @@ export function precalculateInvoiceAddress(
     amount,
     paid: false,
     active: true,
+    acceptsJetton,
+    jettonMasterAddress,
+    jettonWalletCode: Cell.fromBase64(jettonWalletCode),
   };
   const cell = invoiceConfigToCell(config);
   return contractAddress(0, {

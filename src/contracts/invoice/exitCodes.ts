@@ -4,4 +4,5 @@ export const InvoiceExitCodes = {
   NOT_ENOUGH_TONS: 0xf003,
   INVALID_CUSTOMER: 0xf004,
   INVOICE_FINALIZED: 0xf005,
+  INVOICE_INVALID_CURRENCY: 0xf006,
 };
