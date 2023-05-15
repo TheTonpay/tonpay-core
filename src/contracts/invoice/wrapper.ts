@@ -267,6 +267,21 @@ export class InvoiceWrapper implements Contract {
     return result.stack.readNumber() == -1;
   }
 
+  async getInvoiceAcceptsJetton(provider: ContractProvider) {
+    const result = await provider.get("get_invoice_accepts_jetton", []);
+    return result.stack.readNumber() == -1;
+  }
+
+  async getInvoiceJettonMasterAddress(provider: ContractProvider) {
+    const result = await provider.get("get_invoice_jetton_master_address", []);
+    return result.stack.readAddress();
+  }
+
+  async getInvoiceJettonWalletCode(provider: ContractProvider) {
+    const result = await provider.get("get_invoice_jetton_wallet_code", []);
+    return result.stack.readCell();
+  }
+
   async getInvoiceVersion(provider: ContractProvider) {
     const result = await provider.get("get_invoice_version", []);
     return result.stack.readNumber();
