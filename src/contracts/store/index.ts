@@ -21,4 +21,5 @@ export {
   buildFullCodeUpgradeMessage,
   buildStoreCodeUpgradeMessage,
   buildInvoiceCodeUpgradeMessage,
+  buildRequestPurchaseWithJettonsMessage,
 } from "./messages";
