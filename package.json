@@ -1,6 +1,6 @@
 {
   "name": "@tonpay/core",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "description": "Tonpay core utilities and tools to interact with Tonpay core entities and create various deeplinks for external usage.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
