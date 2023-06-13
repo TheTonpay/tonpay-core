@@ -15,8 +15,8 @@ export function buildTonDeeplink(
   return `${
     format === "ton" ? "ton://" : "https://app.tonkeeper.com/"
   }transfer/${address}?amount=${amount.toString()}${
-    body ? "&bin=" + body.toBoc().toString("base64") : ""
-  }${stateInit ? "&init=" + stateInit.toBoc().toString("base64") : ""}`;
+    body ? "&bin=" + body.toBoc().toString("base64url") : ""
+  }${stateInit ? "&init=" + stateInit.toBoc().toString("base64url") : ""}`;
 }
 
 export function buildCoinsTransferDeeplink(address: Address, amount: bigint) {
