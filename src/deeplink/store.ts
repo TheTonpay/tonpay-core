@@ -7,7 +7,7 @@ import { buildRequestPurchaseMessage } from "../contracts/store/messages";
  * Build a deeplink to request a purchase with TON
  *
  * @param storeAddress The address of the store contract
- * @param amount The amount to pay in nanoTON
+ * @param amount The amount to pay in TON
  * @param invoiceId The invoice id
  * @param gasFee The gas fee in nanoTON
  * @param metadata Optional metadata string, max 500 characters
@@ -20,7 +20,7 @@ import { buildRequestPurchaseMessage } from "../contracts/store/messages";
  * ```ts
  * const deeplink = buildUserPaymentLink(
  *     "EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N",
- *     1000000000,
+ *     4.2,
  *     "in_arbitrarystring"
  * );
  * ```
@@ -55,7 +55,7 @@ export function buildUserPaymentLink(
 
   return buildMessageDeeplink(
     Address.parse(storeAddress),
-    toNano(`${amount + gasFee}`),
+    toNano(`${amount}`) + BigInt(gasFee),
     buildRequestPurchaseMessage(invoiceId, toNano(`${amount}`), metadata),
     format
   );
