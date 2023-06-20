@@ -55,7 +55,7 @@ export function invoiceConfigToCell(config: InvoiceConfig): Cell {
   }
 
   if (config.metadata && config.metadata.length > 500) {
-    throw new Error("MEtadata must not be longer than 500 characters");
+    throw new Error("Metadata must not be longer than 500 characters");
   }
 
   if (config.amount <= 0) {
